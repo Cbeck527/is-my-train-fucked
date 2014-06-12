@@ -3,25 +3,36 @@ from tabulate import tabulate
 from flask import Flask
 app = Flask(__name__)
 
+def generate_statuses():
+    print "Fetching status from MTA"
+    tree = etree.parse("http://web.mta.info/status/serviceStatus.txt")
+    root = tree.getroot()
 
-tree = etree.parse("http://web.mta.info/status/serviceStatus.txt")
-root = tree.getroot()
+    def generate_last_line(firstLine):
+        if firstLine == "GOOD SERVICE":
+            status = "NOPE"
+        else:
+            status = "YUP"
+        return status
 
-def generate_last_line(firstLine):
-    if firstLine == "GOOD SERVICE":
-        status = "NOPE"
-    else:
-        status = "YUP"
-    return status
-
-status_list = [ [item[0].text, item[1].text, generate_last_line(item[1].text)] for item in root[2] ]
-
-# print tabulate(status_list, headers=["Subway Line", "Status", "Is it fucked?"])
+    status_list = [
+            [item[0].text, item[1].text, generate_last_line(item[1].text)] for item in root[2]
+            ]
+    return status_list
 
 @app.route('/')
 def is_my_train_fucked():
 
-    return '<html><pre>' +  tabulate(status_list, headers=["Subway Line", "Status", "Is it fucked?"]) + '</pre></html>'
+    tabbed_statuses = tabulate(generate_statuses(), headers=["Subway Line", "Status", "Is it fucked?"])
+
+    html = '''
+<html>
+<pre>
+{}
+</pre>
+</html>
+'''.format(tabbed_statuses)
+    return html
 
 if __name__ == '__main__':
     app.run()
