@@ -29,6 +29,8 @@ def is_my_train_fucked():
 <html>
 <pre>
 {}
+<br />
+source code <a href="https://github.com/Cbeck527/is-my-train-fucked">on github</a>
 </pre>
 </html>
 '''.format(tabbed_statuses)
