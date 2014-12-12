@@ -3,15 +3,15 @@ from tabulate import tabulate
 from flask import Flask
 app = Flask(__name__)
 
+def generate_last_line(firstLine):
+    if firstLine == "GOOD SERVICE":
+        return "NOPE"
+    return "YUP"
+
 def generate_statuses():
     print "Fetching status from MTA"
     tree = etree.parse("http://web.mta.info/status/serviceStatus.txt")
     root = tree.getroot()
-
-    def generate_last_line(firstLine):
-        if firstLine == "GOOD SERVICE":
-            return "NOPE"
-        return "YUP"
 
     status_list = [
             [item[0].text, item[1].text, generate_last_line(item[1].text)] for item in root[2]
