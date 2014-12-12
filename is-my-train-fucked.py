@@ -10,10 +10,8 @@ def generate_statuses():
 
     def generate_last_line(firstLine):
         if firstLine == "GOOD SERVICE":
-            status = "NOPE"
-        else:
-            status = "YUP"
-        return status
+            return "NOPE"
+        return "YUP"
 
     status_list = [
             [item[0].text, item[1].text, generate_last_line(item[1].text)] for item in root[2]
