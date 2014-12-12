@@ -4,9 +4,10 @@ from flask import Flask
 app = Flask(__name__)
 
 def generate_last_line(firstLine):
+    status = "NOPE"
     if firstLine == "GOOD SERVICE":
-        return "NOPE"
-    return "YUP"
+        status = "YUP"
+    return status
 
 def generate_statuses():
     print "Fetching status from MTA"
