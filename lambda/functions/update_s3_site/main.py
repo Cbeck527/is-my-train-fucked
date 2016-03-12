@@ -42,7 +42,7 @@ def handle(event, context):
 
     print("Connecting to s3")
     s3 = boto3.resource('s3')
-    s3.Object('beta.ismytrainfucked.com', 'index.html').put(
+    s3.Object('www.ismytrainfucked.com', 'index.html').put(
         Body=HTML.format(table, GA), ContentType="text/html"
     )
     return 'Successfully processed {} records.'.format(len(event['Records']))
