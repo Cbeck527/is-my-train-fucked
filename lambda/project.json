@@ -1,0 +1,8 @@
+{
+  "name": "ismytrainfucked",
+  "description": "IsMyTrainFucked.com API",
+  "runtime": "python",
+  "memory": 128,
+  "timeout": 10,
+  "role": "arn:aws:iam::204617975632:role/lambda_dynamo"
+}

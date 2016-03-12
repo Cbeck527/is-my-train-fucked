@@ -21,6 +21,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+*.dist-info/
 
 # Installer logs
 pip-log.txt
@@ -52,3 +53,8 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# project-specific stuff
+secrets.sh
+s3_website.yml*
+bs4/
+requests/
