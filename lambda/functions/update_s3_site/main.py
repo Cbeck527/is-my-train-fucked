@@ -2,6 +2,7 @@ from __future__ import print_function
 from tabulate import tabulate
 
 import boto3
+import datetime
 
 HTML = '''
 <html>
@@ -10,8 +11,10 @@ HTML = '''
 {0}
 <br />
 source code <a href="https://github.com/Cbeck527/is-my-train-fucked">on github</a>
+<br />
+last updated: {1}
 </pre>
-{1}
+{2}
 </body>
 </html>
 '''
@@ -39,10 +42,12 @@ def handle(event, context):
 
     status = [[item['L'][0]['S'], item['L'][1]['S'], item['L'][2]['S']] for item in data]
     table = tabulate(status, headers=["Subway Line", "Status", "Is it fucked?"])
+    last_updated = datetime.datetime.isoformat(datetime.datetime.now())
 
     print("Connecting to s3")
     s3 = boto3.resource('s3')
     s3.Object('www.ismytrainfucked.com', 'index.html').put(
-        Body=HTML.format(table, GA), ContentType="text/html"
+        Body=HTML.format(table, last_updated, GA),
+        ContentType="text/html",
     )
     return 'Successfully processed {} records.'.format(len(event['Records']))
