@@ -1,4 +1,0 @@
-{
-  "description": "Respond to Dynamo Stream and write HTML file to S3",
-  "role": "arn:aws:iam::204617975632:role/ismytrainfucked_lambda_to_s3"
-}
