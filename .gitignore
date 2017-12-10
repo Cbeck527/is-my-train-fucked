@@ -110,3 +110,4 @@ secrets.sh
 s3_website.yml*
 bs4/
 requests/
+pytz*
