@@ -13,6 +13,7 @@ import json
 import requests
 import time
 
+
 HTML = '''
 <html>
 <head><meta name="viewport" content="initial-scale=1.0"></head>
@@ -47,6 +48,7 @@ def _log_print(message):
         'message': message
     }
     print(json.dumps(log_entry))
+
 
 def handle(_, __):
     _log_print("Fetching status from MTA")
@@ -85,7 +87,8 @@ def handle(_, __):
         Body=HTML.format(html_table, last_updated, GA),
         ContentType="text/html"
     )
-    return
+    return {'message': "ALL GOOD, YO!"}
+
 
 if __name__ == '__main__':
     handle('', '')

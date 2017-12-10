@@ -1,4 +1,5 @@
 {
-  "name": "update_website",
-  "description": "Query MTA API, write values to DynamoDB, and write HTML website to S3"
+    "name": "update_website",
+    "description": "Query MTA API, write values to DynamoDB, and write HTML website to S3",
+    "role": "arn:aws:iam::204617975632:role/ismytrainfucked_lambda_to_s3"
 }
