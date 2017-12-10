@@ -1,3 +1,0 @@
-{
-  "description": "Pull the latest MTA status on a schedule, load into DynamoDB"
-}

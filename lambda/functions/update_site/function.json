@@ -1,0 +1,4 @@
+{
+  "name": "update_website",
+  "description": "Query MTA API, write values to DynamoDB, and write HTML website to S3"
+}

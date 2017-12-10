@@ -1,0 +1,13 @@
+*.dist-info/
+*.pyc
+boto3/
+botocore/
+bs4/
+concurrent/
+dateutil/
+docutils/
+jmespath/
+requests/
+s3transfer/
+six.py
+tabulate.py
