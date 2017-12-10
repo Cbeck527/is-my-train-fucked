@@ -67,26 +67,27 @@ def handle(_, __):
             data.append([line, status, is_it_fucked])
 
     # TODO: change the schema of this data, but talk to @MichaelACraig first
-    dynamo = boto3.resource('dynamodb')
-    table = dynamo.Table('ismytrainfucked')
+    s3 = boto3.resource('s3')
+
     status = {
-        "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d"),
-        "time": decimal.Decimal(time.time()),
+        "date": datetime.datetime.strftime(datetime.datetime.now(), "%c"),
         "data": data,
     }
+    s3.Object('ismytrainfucked-data', str(time.time()).split('.')[0]).put(
+        Body=json.dumps(status),
+        ContentType="application/json"
+    )
 
-    table.put_item(Item=status)
-    _log_print('Logged to DB')
+    _log_print('Wrote file to S3')
     _log_print(data)
 
     html_table = tabulate(data, headers=["Subway Line", "Status", "Is it fucked?"])
     last_updated = datetime.datetime.isoformat(datetime.datetime.now())
-    _log_print("Connecting to s3")
-    s3 = boto3.resource('s3')
     s3.Object('www.ismytrainfucked.com', 'index.html').put(
         Body=HTML.format(html_table, last_updated, GA),
         ContentType="text/html"
     )
+    _log_print("Wrote index file to website bucket")
     return {'message': "ALL GOOD, YO!"}
 
 
