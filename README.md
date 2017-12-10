@@ -13,10 +13,11 @@ testing.
 
 ## Data Flow
 
-1. MTA information is loaded into DynamoDB every 15 minutes by the `update_log`
-   function
-2. The `update_s3_site` function is invoked as a DynamoDB INSERT trigger, and a
-   new file is written to the IMTF S3 bucket.
+1. MTA information is queried every minute
+   
+   a. New data is written to S3 for record-keeping purposes (perhaps querying w/ Atlas in the future?)
+
+   b. New data is written to index.html file and uploaded to S3 hosted website
 
 Pretty simple!
 

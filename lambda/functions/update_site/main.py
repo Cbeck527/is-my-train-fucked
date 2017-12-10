@@ -1,5 +1,5 @@
 """
-Query MTA API, write values to DynamoDB, and write HTML website to S3
+Query MTA API, and write data and HTML website to S3
 """
 from __future__ import print_function
 
