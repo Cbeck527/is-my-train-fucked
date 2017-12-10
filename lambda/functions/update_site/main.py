@@ -4,15 +4,18 @@ Query MTA API, write values to DynamoDB, and write HTML website to S3
 from __future__ import print_function
 
 from bs4 import BeautifulSoup as Soup
+from pytz import timezone
 from tabulate import tabulate
 
 import boto3
 import datetime
-import decimal
 import json
 import requests
 import time
 
+
+# NYC is only in one time zone
+TIMEZONE = timezone('US/Eastern')
 
 HTML = '''
 <html>
@@ -70,7 +73,7 @@ def handle(_, __):
     s3 = boto3.resource('s3')
 
     status = {
-        "date": datetime.datetime.strftime(datetime.datetime.now(), "%c"),
+        "date": datetime.datetime.now(TIMEZONE).strftime("%A %B %d %I:%M %p"),
         "data": data,
     }
     s3.Object('ismytrainfucked-data', str(time.time()).split('.')[0]).put(
@@ -82,7 +85,7 @@ def handle(_, __):
     _log_print(data)
 
     html_table = tabulate(data, headers=["Subway Line", "Status", "Is it fucked?"])
-    last_updated = datetime.datetime.isoformat(datetime.datetime.now())
+    last_updated = datetime.datetime.now(TIMEZONE).strftime("%A %B %d %I:%M %p")
     s3.Object('www.ismytrainfucked.com', 'index.html').put(
         Body=HTML.format(html_table, last_updated, GA),
         ContentType="text/html"
