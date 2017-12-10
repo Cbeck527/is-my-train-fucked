@@ -7,6 +7,9 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+*.dist-info/
+*.egg
+*.egg-info/
 .Python
 build/
 develop-eggs/
@@ -101,3 +104,9 @@ ENV/
 # chalice
 .chalice/deployments/
 .chalice/venv/
+
+# project-specific stuff
+secrets.sh
+s3_website.yml*
+bs4/
+requests/
