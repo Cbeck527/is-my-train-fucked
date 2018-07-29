@@ -47,42 +47,41 @@ ga('send', 'pageview');
 
 
 def _log_print(message):
-    log_entry = {
-        'message': message
-    }
-    print(json.dumps(log_entry))
+    print(json.dumps({'message': message}))
+
+
+def _put_item_with_latest_and_timestamp(dynamo_resource, item):
+    """
+    Put an item into DynamoDB with the sort key set as `latest` and the actual
+    timestamp.
+    """
+    for timestamp in ('latest', datetime.datetime.now(TIMEZONE).strftime("%Y-%m-%d-%H-%M")):
+        item['date'] = timestamp
+        dynamo_resource.put_item(Item=item)
 
 
 def handle(_, __):
-    _log_print("Fetching status from MTA")
-    data = []
+    dynamodb = boto3.resource('dynamodb')
+    imtf = dynamodb.Table('imtf-test')
 
+    _log_print("Fetching status from MTA")
+
+    data = []
     r = requests.get('http://web.mta.info/status/serviceStatus.txt')
     soup = Soup(r.text, "html.parser")
-    for subway in soup.findAll("subway"):
-        for status in subway.findAll("line"):
-            line = (status.contents[1].contents[0])
-            status = (status.contents[3].contents[0])
-            if status != "GOOD SERVICE":
-                is_it_fucked = "YUP"
-            else:
-                is_it_fucked = "NOPE"
-            data.append([line, status, is_it_fucked])
-
-    # TODO: change the schema of this data, but talk to @MichaelACraig first
-    s3 = boto3.resource('s3')
-
-    status = {
-        "date": datetime.datetime.now(TIMEZONE).strftime("%A %B %d %I:%M %p"),
-        "data": data,
-    }
-    s3.Object('ismytrainfucked-data', str(time.time()).split('.')[0]).put(
-        Body=json.dumps(status),
-        ContentType="application/json"
-    )
-
-    _log_print('Wrote file to S3')
-    _log_print(data)
+    subway = soup.find("subway")
+    for status in subway.findAll("line"):
+        line = status.contents[1].contents[0]
+        status_title = status.contents[3].contents[0]
+        # status_description = status.contents[5].contents[0].strip()
+        is_it_fucked = "YUP" if status_title != "GOOD SERVICE" else "NOPE"
+        _put_item_with_latest_and_timestamp(imtf, {
+                "line": line,
+                "status_title": status_title,
+                # "status_description": status_description,
+                "is_it_fucked": is_it_fucked,
+        })
+        data.append([line, status_title, is_it_fucked])
 
     html_table = tabulate(data, headers=["Subway Line", "Status", "Is it fucked?"])
     last_updated = datetime.datetime.now(TIMEZONE).strftime("%A %B %d %I:%M %p")
