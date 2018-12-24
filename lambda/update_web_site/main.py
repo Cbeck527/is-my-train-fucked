@@ -24,9 +24,9 @@ HTML = '''
 <pre>
 {0}
 <br />
-source code <a href="https://github.com/Cbeck527/is-my-train-fucked">on github</a>
-<br />
 last updated: {1}
+<br />
+source code <a href="https://github.com/Cbeck527/is-my-train-fucked">on github</a>
 </pre>
 {2}
 </body>
