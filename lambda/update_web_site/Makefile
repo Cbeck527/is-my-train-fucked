@@ -15,7 +15,7 @@ clean: cleandist
 cleandist:
 	rm -rf build
 
-dist: clean build/deploy.zip
+dist: cleandist build/deploy.zip
 
 build/deploy.zip: imtf.py
 	mkdir -p build/
