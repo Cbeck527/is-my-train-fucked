@@ -1,8 +1,6 @@
 """
 Query MTA API, and write data and HTML website to S3
 """
-from __future__ import print_function
-
 from bs4 import BeautifulSoup as Soup
 from pytz import timezone
 from tabulate import tabulate
@@ -54,6 +52,8 @@ def _put_item_with_latest_and_timestamp(dynamo_resource, item):
     """
     Put an item into DynamoDB with the sort key set as `latest` and the actual
     timestamp.
+
+    This function is DISABLED rn because idk how I want to store this data yet.
     """
     for timestamp in ('latest', datetime.datetime.now(TIMEZONE).strftime("%Y-%m-%d-%H-%M")):
         item['date'] = timestamp
@@ -63,11 +63,11 @@ def _put_item_with_latest_and_timestamp(dynamo_resource, item):
 def handle(_, __):
     dynamodb = boto3.resource('dynamodb')
     imtf = dynamodb.Table('imtf-test')
-
-    _log_print("Fetching status from MTA")
+    s3 = boto3.resource('s3')
 
     data = []
     r = requests.get('http://web.mta.info/status/serviceStatus.txt')
+    _log_print("Fetched status from MTA")
     soup = Soup(r.text, "html.parser")
     subway = soup.find("subway")
     for status in subway.findAll("line"):
@@ -75,12 +75,16 @@ def handle(_, __):
         status_title = status.contents[3].contents[0]
         # status_description = status.contents[5].contents[0].strip()
         is_it_fucked = "YUP" if status_title != "GOOD SERVICE" else "NOPE"
-        _put_item_with_latest_and_timestamp(imtf, {
-                "line": line,
-                "status_title": status_title,
-                # "status_description": status_description,
-                "is_it_fucked": is_it_fucked,
-        })
+
+        # TODO: figure out how I want to store data, and do this the right
+        # way...
+        # _put_item_with_latest_and_timestamp(imtf, {
+        #         "line": line,
+        #         "status_title": status_title,
+        #         # "status_description": status_description,
+        #         "is_it_fucked": is_it_fucked,
+        # })
+
         data.append([line, status_title, is_it_fucked])
 
     html_table = tabulate(data, headers=["Subway Line", "Status", "Is it fucked?"])
