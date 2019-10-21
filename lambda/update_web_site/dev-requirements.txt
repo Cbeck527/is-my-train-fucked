@@ -22,5 +22,5 @@ s3transfer==0.1.13
 six==1.12.0
 tabulate==0.8.2
 traitlets==4.3.2
-urllib3==1.24.1
+urllib3==1.24.2
 wcwidth==0.1.7
