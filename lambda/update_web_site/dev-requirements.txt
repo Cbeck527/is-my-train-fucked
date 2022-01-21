@@ -5,7 +5,7 @@ boto3==1.9.71
 botocore==1.12.71
 decorator==4.3.0
 docutils==0.14
-ipython==7.2.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 jedi==0.13.2
 jmespath==0.9.3
